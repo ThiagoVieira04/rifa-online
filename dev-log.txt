@@ -1,0 +1,20 @@
+
+> rifa-online@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.26:3000
+- Environments: .env
+✓ Ready in 519ms
+
+○ Compiling / ...
+ GET /api/raffles?limit=12 401 in 4.2s (next.js: 4.1s, application-code: 62ms)
+ GET / 200 in 22.8s (next.js: 17.9s, application-code: 4.9s)
+ GET /api/auth/me 401 in 631ms (next.js: 609ms, application-code: 22ms)
+ GET /login 200 in 831ms (next.js: 676ms, application-code: 155ms)
+ GET /login 200 in 79ms (next.js: 14ms, application-code: 65ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /api/auth/login 500 in 958ms (next.js: 395ms, application-code: 563ms)
+ GET /register 200 in 619ms (next.js: 559ms, application-code: 60ms)
+ POST /api/auth/register 500 in 774ms (next.js: 308ms, application-code: 466ms)

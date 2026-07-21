@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  raffles  Raffle[]
+  auditLogs AuditLog[]
+
+  @@index([email])
+}
+
+model Raffle {
+  id            String        @id @default(cuid())
+  title         String
+  description   String?       @db.Text
+  prize         String
+  prizeImage    String?
+  minNumbers    Int           @default(1)
+  maxNumbers    Int           @default(100)
+  drawDate      DateTime?
+  status        RaffleStatus  @default(ACTIVE)
+  winnerNumber  Int?
+  winnerName    String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  creatorId     String
+  allowMultipleWinners Boolean  @default(false)
+  quantityWinners       Int     @default(1)
+
+  creator     User              @relation(fields: [creatorId], references: [id])
+  participants RaffleParticipant[]
+  draws       Draw[]
+  auditLogs   AuditLog[]
+
+  @@index([creatorId])
+  @@index([status])
+}
+
+model RaffleParticipant {
+  id             String   @id @default(cuid())
+  raffleId       String
+  number         Int
+  participantName  String
+  participantPhone String?
+  participantEmail String?
+  createdAt      DateTime @default(now())
+
+  raffle Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
+
+  @@unique([raffleId, number])
+  @@index([raffleId])
+}
+
+model Draw {
+  id         String     @id @default(cuid())
+  raffleId   String
+  drawDate   DateTime   @default(now())
+  drawnNumber Int
+  winnerName  String?
+  reason     String?
+  isRedraw   Boolean    @default(false)
+  canceledAt  DateTime?
+  createdAt  DateTime   @default(now())
+
+  raffle Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
+
+  @@index([raffleId])
+  @@index([raffleId, drawDate])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  details   String?  @db.Text
+  userId    String?
+  raffleId  String?
+  createdAt DateTime @default(now())
+
+  user   User?   @relation(fields: [userId], references: [id])
+  raffle Raffle? @relation(fields: [raffleId], references: [id])
+
+  @@index([raffleId])
+  @@index([createdAt])
+}
+
+enum RaffleStatus {
+  ACTIVE
+  DRAWING
+  COMPLETED
+  CANCELED
+}
